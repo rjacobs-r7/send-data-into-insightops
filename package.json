@@ -1,0 +1,22 @@
+{
+  "name": "send-data-into-insightops",
+  "version": "1.0.0",
+  "description": "Send data to InsightOps",
+  "main": "loop.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjacobs-r7/send-data-into-insightops.git"
+  },
+  "author": "Robin Jacobs <robin_jacobs@rapid7.com>",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/rjacobs-r7/send-data-into-insightops/issues"
+  },
+  "homepage": "https://github.com/rjacobs-r7/send-data-into-insightops#readme",
+  "dependencies": {
+    "bluebird": "^3.5.1"
+  }
+}

@@ -1,0 +1,48 @@
+body {
+	background: black;
+	color: lime;
+	font-family: monopace, monospace;
+	font-size: 16px;
+}
+
+.button {
+	font-size: 2em;
+	text-decoration: none !important;
+}
+
+form table tr th {
+	text-align: right;
+}
+
+textarea {
+	height: 400px;
+	width: 400px;
+	max-width: 60vw;
+	max-height: 900vh;
+}
+
+input, select, textarea {
+	border: 0px;
+	background: #2E2E2E;
+	color: yellow;
+	font-family: monopace, monospace;
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	font-size: 0.9em;
+}
+
+small {
+	font-size: 0.72em;
+	color: grey;
+}
+
+.error {
+	color: red;
+	font-weight: bold;
+}
+
+.index td {
+	color: yellow;
+	text-align: center;
+}
