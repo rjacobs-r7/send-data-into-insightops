@@ -1,0 +1,14 @@
+{
+    "name": "rjacobs/send-data-into-insightops",
+    "type": "project",
+    "license": "GPL-3",
+    "authors": [
+        {
+            "name": "Robin Jacobs",
+            "email": "robin_jacobs@rapid7.com"
+        }
+    ],
+    "require": {
+        "aws/aws-sdk-php": "^3.123"
+    }
+}

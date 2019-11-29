@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/rjacobs-r7/send-data-into-insightops#readme",
   "dependencies": {
-    "bluebird": "^3.5.1"
+    "aws-sdk": "^2.580.0",
+    "bluebird": "^3.7.2"
   }
 }

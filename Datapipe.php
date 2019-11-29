@@ -1,4 +1,12 @@
 <?php
+require_once('vendor/autoload.php');
+
+use Aws\S3\S3Client;  
+use Aws\Exception\AwsException;
+
+define('CONFIG_S3_ENDPOINT', getenv('S3_ENDPOINT'));
+define('CONFIG_S3_BUCKET', getenv('S3_BUCKET'));
+
 class Datapipe {
 	private $id;
 	private $target;
@@ -43,8 +51,18 @@ class Datapipe {
 			'data' => $this->data,
 			'delay' => $this->delay
 		];
+		$json = json_encode($data);
 
-		file_put_contents(DATA_DIR . $this->id, json_encode($data));
+		file_put_contents(DATA_DIR . $this->id, $json);
+
+		if (CONFIG_S3_BUCKET) {
+			$s3 = Datapipe::getS3Client();
+			$s3->putObject([
+				'Bucket' => CONFIG_S3_BUCKET,
+				'Key' => $this->id,
+				'Body' => $json
+			]);
+		}
 	}
 
 	public function update($data, $exists = true) {
@@ -87,10 +105,20 @@ class Datapipe {
 		return $template;
 	}
 
+	private static function fileIterator() {
+		if (CONFIG_S3_BUCKET) {
+			return array_map(function($s3Obj) {
+				return $s3Obj['Key'];
+			}, self::getS3Client()->getListObjectsIterator(['Bucket' => $bucket]));
+		}
+		
+		return scandir(DATA_DIR);
+	}
+
 	public static function all() : array {
 		$pipes = [];
-		
-		foreach(scandir(DATA_DIR) as $file) {
+
+		foreach(self::fileIterator() as $file) {
 			if (strpos($file, '.') !== 0) {
 				$pipes[] = Datapipe::load($file);
 			}
@@ -100,6 +128,19 @@ class Datapipe {
 	}
 
 	public static function load(string $file) : Datapipe {
+		if (CONFIG_S3_BUCKET) {
+			$s3 = Datapipe::getS3Client();
+			$content = $s3->getObject([
+				'Bucket' => CONFIG_S3_BUCKET,
+				'Key' => $file
+			])['Body'];
+
+			$data = json_decode($content, true);
+			$data['id'] = $file;
+
+			return new Datapipe($data, true);
+		}
+
 		$data = json_decode(file_get_contents(DATA_DIR . $file), true);
 		$data['id'] = $file;
 
@@ -107,6 +148,26 @@ class Datapipe {
 	}
 
 	public static function exists(string $file) : bool {
+		if (CONFIG_S3_BUCKET) {
+			foreach(self::fileIterator() as $s3Obj) {
+				if ($s3Obj === $file) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		return file_exists(DATA_DIR . $file);
+	}
+
+	private static function getS3Client() : S3Client {
+		if (empty(CONFIG_S3_ENDPOINT)) {
+			return new S3Client();
+		}
+
+		return new S3Client([
+			'endpoint' => CONFIG_S3_ENDPOINT
+		]);
 	}
 }
