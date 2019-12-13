@@ -2,7 +2,7 @@ const Fs = require('fs');
 const Net = require('net');
 const Promise = require('bluebird');
 
-const CONFIG_VERBOSE = process.env.VERBOSE;
+const CONFIG_VERBOSE = !!process.env.VERBOSE;
 const CONFIG_S3_BUCKET = process.env.S3_BUCKET;
 const CONFIG_S3_ENDPOINT = process.env.S3_ENDPOINT;
 
